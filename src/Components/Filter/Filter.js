@@ -2,12 +2,10 @@ import React from "react";
 
 class Filter extends React.Component {
   filterHandler(e) {
-    // console.log(e.target.value);
     this.props.filterHandler(e.target.value);
-    this.props.filter();
+    // this.props.filter();
   }
   render() {
-    // console.log("this.props.species:", this.props.species);
     return (
       <>
         {this.props.species && (
@@ -30,12 +28,9 @@ class Filter extends React.Component {
             <br />
             <select id="species" onChange={e => this.filterHandler(e)}>
               <option value="All">All</option>
-              <option value="Human">Human</option>
-              <option value="Humanoid">Humanoid</option>
-              <option value="Alien">Alien</option>
-              <option value="Disease">Disease</option>
-              <option value="Robot">Robot</option>
-              <option value="Parasite">Parasite</option>
+              <option value="Alive">Alive</option>
+              <option value="Dead">Dead</option>
+              <option value="unknown">Unknown</option>
             </select>
             Status
           </>

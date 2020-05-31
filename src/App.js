@@ -15,84 +15,90 @@ class App extends Component {
     pages: 30,
     activePage: 1,
     characters: [],
-    renderedCharacters: []
+    renderedCharacters: [],
+    date: []
   };
 
   componentDidMount() {
     this.fetchCharacters(this.activePage);
-
-    // console.log("modulus: ", modulus);
   }
 
   fetchCharacters = (queryParameter, activePage) => {
-    console.log("fetchCharacters!!");
-
     if (activePage === undefined) {
       activePage = this.state.activePage;
     }
     let page = queryParameter ? queryParameter : this.state.activePage;
     let queryUrl = "";
+    let renderedCharacters;
 
     if (this.state.filter[0] === "All" && this.state.filter[1] === "All") {
-      console.log(
-        `this.state.filter[0] === "All" && this.state.filter[1] === "All"`
-      );
-
       fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
         .then(response => response.json())
         .then(data => {
-          // console.log(data);
-
-          this.setState({
-            ...this.state,
-            totalCharacters: data.info.count,
-            renderedCharacters: data.results.slice(0, 10),
-            characters: data.results,
-            activePage: activePage
-          });
+          this.fetchThen(data, activePage, renderedCharacters);
         });
     } else if (
       this.state.filter[0] !== "All" &&
       this.state.filter[1] !== "All"
     ) {
-      console.log(`this.state.filter[0] !== "All" &&
-      this.state.filter[1] !== "All"`);
-    } else if (
-      this.state.filter[0] !== "All" ||
-      this.state.filter[1] !== "All"
-    ) {
-      console.log(`this.state.filter[0] !== "All" ||
-        this.state.filter[1] !== "All"`);
+      fetch(
+        `https://rickandmortyapi.com/api/character/?species=${
+          this.state.filter[0]
+        }&&status=${this.state.filter[1]}&&page=${page}`
+      )
+        .then(response => response.json())
+        .then(data => {
+          this.fetchThen(data, activePage, renderedCharacters);
+        });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    else if (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") {
       if (this.state.filter[0] !== "All") {
-        console.log("first filter changed");
-        // fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
-        //   .then(response => response.json())
-        //   .then(data => {
-        //     // console.log(data);
-        //
-        //     this.setState({
-        //       ...this.state,
-        //       totalCharacters: data.info.count,
-        //       renderedCharacters: data.results.slice(0, 10),
-        //       characters: data.results,
-        //       activePage: activePage
-        //     });
-        //   });
+        queryUrl = `?species=${this.state.filter[0]}&&page=${page}`;
+        fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
+          .then(response => response.json())
+          .then(data => {
+            this.fetchThen(data, activePage, renderedCharacters);
+          });
       } else {
+        queryUrl = `?status=${this.state.filter[1]}&&page=${page}`;
+        fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
+          .then(response => response.json())
+          .then(data => {
+            this.fetchThen(data, activePage, renderedCharacters);
+          });
       }
-      // queryUrl = `?page=${page}`;
+      ///////////////////////////////////////////////////////////////////////////////////////////////
     }
   };
 
+  fetchThen(data, activePage, renderedCharacters) {
+    if (activePage % 2 === 0) {
+      renderedCharacters = data.results.slice(10, 20);
+    } else {
+      renderedCharacters = data.results.slice(0, 10);
+    }
+
+    this.setState({
+      ...this.state,
+      totalCharacters: data.info.count,
+      renderedCharacters: renderedCharacters,
+      characters: data.results,
+      activePage: activePage
+    });
+  }
+
   handlePageChange(pageNumber) {
-    console.log("handlePageChange!!");
-    let qeryParameter =
-      0.5 + (pageNumber / 2 === 0 ? pageNumber - 1 : pageNumber) / 2;
-    this.fetchCharacters(qeryParameter, pageNumber);
+    let queryParameter =
+      (pageNumber / 2 === 0 ? pageNumber - 1 : pageNumber) / 2;
+
+    console.log("pageNumber:", pageNumber);
+    console.log("queryParameter:", queryParameter.toFixed(0));
+
+    this.fetchCharacters(queryParameter.toFixed(0), pageNumber);
   }
 
   render() {
-    console.log(this.state.filter);
     return (
       <div className="App">
         <h1>Characters API</h1>
@@ -105,7 +111,6 @@ class App extends Component {
             })
           }
           species
-          filter={this.fetchCharacters}
         />
         <Filter
           filterHandler={filter =>
@@ -116,19 +121,22 @@ class App extends Component {
             })
           }
           status
-          fetchCharacters={this.fetchCharacters}
         />
+        <br />
+        <button onClick={this.fetchCharacters}>Search</button>
+
         <Characters characters={this.state.renderedCharacters} />
         <Pagination
           activePage={this.state.activePage}
           itemsCountPerPage={10}
-          totalItemsCount={this.state.totalCharacters - 10}
-          pageRangeDisplayed={5}
+          totalItemsCount={this.state.totalCharacters}
+          pageRangeDisplayed={30}
           itemClass={"page-item"}
           linkClass={"page-link"}
           onChange={this.handlePageChange.bind(this)}
           hideDisabled={true}
         />
+        {this.state.filter && <>{this.state.filter}</>}
       </div>
     );
   }
