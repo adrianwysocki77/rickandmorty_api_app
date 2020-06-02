@@ -12,11 +12,15 @@ class App extends Component {
     nextCharacters: "",
     prevCharacters: "",
     totalCharacters: 0,
-    pages: 30,
+    pages: null,
     activePage: 1,
     characters: [],
+    charactersDate: [],
     renderedCharacters: [],
-    date: []
+    date: [null, null],
+    dateFilterLimit: [null, null],
+    dateFilterActive: false,
+    noResults: false
   };
 
   componentDidMount() {
@@ -30,13 +34,31 @@ class App extends Component {
     let page = queryParameter ? queryParameter : this.state.activePage;
     let queryUrl = "";
     let renderedCharacters;
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //New Conditions
 
-    if (this.state.filter[0] === "All" && this.state.filter[1] === "All") {
-      fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
-        .then(response => response.json())
-        .then(data => {
-          this.fetchThen(data, activePage, renderedCharacters);
-        });
+    if (
+      this.state.filter[0] === "All" &&
+      this.state.filter[1] === "All" &&
+      (this.state.date[0] || this.state.date[1])
+    ) {
+      console.log(
+        `(this.state.filter[0] === "All" && this.state.filter[1] === "All") && (this.state.date[0] || this.state.date[1])`
+      );
+      //Taking all characters from API
+    } else if (
+      (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") &&
+      (this.state.date[0] || this.state.date[1])
+    ) {
+      console.log(
+        `(this.state.filter[0] === "All" || this.state.filter[1] === "All") && (this.state.date[0] || this.state.date[1])`
+      );
+
+      if (this.state.filter[0] !== "All") {
+        console.log("this.state.filter[0] !== 'All'", this.state.filter[0]);
+      } else {
+        console.log("this.state.filter[0] !== 'All'", this.state.filter[1]);
+      }
     } else if (
       this.state.filter[0] !== "All" &&
       this.state.filter[1] !== "All"
@@ -50,9 +72,10 @@ class App extends Component {
         .then(data => {
           this.fetchThen(data, activePage, renderedCharacters);
         });
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    else if (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") {
+    } else if (
+      this.state.filter[0] !== "All" ||
+      this.state.filter[1] !== "All"
+    ) {
       if (this.state.filter[0] !== "All") {
         queryUrl = `?species=${this.state.filter[0]}&&page=${page}`;
         fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
@@ -68,37 +91,179 @@ class App extends Component {
             this.fetchThen(data, activePage, renderedCharacters);
           });
       }
-      ///////////////////////////////////////////////////////////////////////////////////////////////
+    } else if (
+      this.state.filter[0] === "All" &&
+      this.state.filter[1] === "All"
+    ) {
+      fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
+        // fetch(
+        //   `https://rickandmortyapi.com/api/character/?created=2017-12-04T18:50:21.651Z&&page=${page}`
+        // )
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          this.fetchThen(data, activePage, renderedCharacters);
+        });
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // if (this.state.filter[0] === "All" && this.state.filter[1] === "All") {
+    //   fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
+    //     // fetch(
+    //     //   `https://rickandmortyapi.com/api/character/?created=2017-12-04T18:50:21.651Z&&page=${page}`
+    //     // )
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       console.log(data);
+    //       this.fetchThen(data, activePage, renderedCharacters);
+    //     });
+    // }
+    // else if (
+    //   this.state.filter[0] !== "All" &&
+    //   this.state.filter[1] !== "All"
+    // ) {
+    //   fetch(
+    //     `https://rickandmortyapi.com/api/character/?species=${
+    //       this.state.filter[0]
+    //     }&&status=${this.state.filter[1]}&&page=${page}`
+    //   )
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       this.fetchThen(data, activePage, renderedCharacters);
+    //     });
+    // }
+    // ////////////////////////////////////////////////////////////////////////////////////////////////
+    // else if (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") {
+    //   if (this.state.filter[0] !== "All") {
+    //     queryUrl = `?species=${this.state.filter[0]}&&page=${page}`;
+    //     fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
+    //       .then(response => response.json())
+    //       .then(data => {
+    //         this.fetchThen(data, activePage, renderedCharacters);
+    //       });
+    //   } else {
+    //     queryUrl = `?status=${this.state.filter[1]}&&page=${page}`;
+    //     fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
+    //       .then(response => response.json())
+    //       .then(data => {
+    //         this.fetchThen(data, activePage, renderedCharacters);
+    //       });
+    //   }
+    //   ///////////////////////////////////////////////////////////////////////////////////////////////
+    // }
+    //
+    // if (this.state.date[0]) {
+    //   console.log("Date in fetchCharacters!!!");
+    //
+    //   // let emptyArr = [];
+    //   let characters = [];
+    //   let newCharacters = [];
+    //
+    //   async function asyncCall(characters, i) {
+    //     const fetchResult = await fetch(
+    //       `https://rickandmortyapi.com/api/character/?page=${page}`
+    //     )
+    //       .then(data => data.json())
+    //       .then(async data => {
+    //         await characters.push(data.results);
+    //         await characters.concat(data.results);
+    //         if (i === data.info.count - 1) {
+    //           await this.setState({
+    //             ...this.state,
+    //             charactersDate: characters
+    //           });
+    //         }
+    //       });
+    //   }
+    //
+    //   for (let i = 0; i < this.state.pages; i++) {
+    //     asyncCall(characters, i);
+    //   }
+    // }
   };
 
   fetchThen(data, activePage, renderedCharacters) {
-    if (activePage % 2 === 0) {
-      renderedCharacters = data.results.slice(10, 20);
+    console.log(data);
+    if (data.error) {
+      this.setState({
+        ...this.state,
+        totalCharacters: 0,
+        pages: null,
+        activePage: 1,
+        renderedCharacters: [],
+        noResults: true
+      });
     } else {
-      renderedCharacters = data.results.slice(0, 10);
-    }
+      if (activePage % 2 === 0) {
+        renderedCharacters = data.results.slice(10, 20);
+      } else {
+        renderedCharacters = data.results.slice(0, 10);
+      }
 
-    this.setState({
-      ...this.state,
-      totalCharacters: data.info.count,
-      renderedCharacters: renderedCharacters,
-      characters: data.results,
-      activePage: activePage
-    });
+      let dateFilterLimit = [...this.state.dateFilterLimit];
+      dateFilterLimit[0] = data;
+
+      this.setState({
+        ...this.state,
+        totalCharacters: data.info.count,
+        pages: data.info.pages,
+        renderedCharacters: renderedCharacters,
+        characters: data.results,
+        activePage: activePage,
+        noResults: false
+      });
+    }
   }
 
   handlePageChange(pageNumber) {
     let queryParameter =
       (pageNumber / 2 === 0 ? pageNumber - 1 : pageNumber) / 2;
 
-    console.log("pageNumber:", pageNumber);
-    console.log("queryParameter:", queryParameter.toFixed(0));
+    // console.log("pageNumber:", pageNumber);
+    // console.log("queryParameter:", queryParameter.toFixed(0));
 
     this.fetchCharacters(queryParameter.toFixed(0), pageNumber);
   }
 
+  startDateHandler(e) {
+    // console.log("startDateHandler handler START");
+    const date = this.state.date;
+    date[0] = e;
+    this.setState({ ...this.state, date: date });
+
+    //    console.log("date[0]: ", date[0]);
+
+    const dateLimit = new Date(this.state.date[0]);
+    dateLimit.setDate(dateLimit.getDate() + 1);
+
+    //    console.log("dateLimit:", dateLimit);
+
+    const dateFilterLimit = [...this.state.dateFilterLimit];
+    dateFilterLimit[0] = dateLimit;
+
+    //    console.log("dateFilterLimit[0]", dateFilterLimit[0]);
+
+    this.setState({ ...this.state, dateFilterLimit: dateFilterLimit });
+  }
+
+  endDateHandler(e) {
+    // console.log("endDateHandler handler END");
+    const date = this.state.date;
+    date[1] = e;
+    this.setState({ ...this.state, date: date });
+
+    const dateLimit = new Date(this.state.date[1]);
+    dateLimit.setDate(dateLimit.getDate() - 1);
+
+    const dateFilterLimit = [...this.state.dateFilterLimit];
+    dateFilterLimit[1] = dateLimit;
+
+    this.setState({ ...this.state, dateFilterLimit: dateFilterLimit });
+  }
+
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <h1>Characters API</h1>
@@ -122,10 +287,31 @@ class App extends Component {
           }
           status
         />
+
+        <Filter
+          date={"Start Date"}
+          selected={this.state.date[0]}
+          dateHandler={date => this.startDateHandler(date)}
+          dateLimit={this.state.dateFilterLimit[1]}
+        />
+        <Filter
+          date={"End Date"}
+          selected={this.state.date[1]}
+          dateHandler={date => this.endDateHandler(date)}
+          dateLimit={this.state.dateFilterLimit[0]}
+        />
+
         <br />
         <button onClick={this.fetchCharacters}>Search</button>
 
-        <Characters characters={this.state.renderedCharacters} />
+        {!this.state.noResults ? (
+          <>
+            <Characters characters={this.state.renderedCharacters} />
+          </>
+        ) : (
+          <>No Results</>
+        )}
+
         <Pagination
           activePage={this.state.activePage}
           itemsCountPerPage={10}
@@ -136,7 +322,6 @@ class App extends Component {
           onChange={this.handlePageChange.bind(this)}
           hideDisabled={true}
         />
-        {this.state.filter && <>{this.state.filter}</>}
       </div>
     );
   }
