@@ -9,8 +9,6 @@ import Filter from "./Components/Filter/Filter";
 class App extends Component {
   state = {
     filter: ["All", "All"],
-    nextCharacters: "",
-    prevCharacters: "",
     totalCharacters: 0,
     pages: null,
     activePage: 1,
@@ -28,37 +26,114 @@ class App extends Component {
   }
 
   fetchCharacters = (queryParameter, activePage) => {
+    this.setState({ noResults: false, totalCharacters: 0 });
     if (activePage === undefined) {
       activePage = this.state.activePage;
     }
     let page = queryParameter ? queryParameter : this.state.activePage;
     let queryUrl = "";
     let renderedCharacters;
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //New Conditions
+    let url;
+    let request = [];
 
-    if (
-      this.state.filter[0] === "All" &&
-      this.state.filter[1] === "All" &&
-      (this.state.date[0] || this.state.date[1])
-    ) {
-      console.log(
-        `(this.state.filter[0] === "All" && this.state.filter[1] === "All") && (this.state.date[0] || this.state.date[1])`
-      );
-      //Taking all characters from API
-    } else if (
-      (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") &&
-      (this.state.date[0] || this.state.date[1])
-    ) {
-      console.log(
-        `(this.state.filter[0] === "All" || this.state.filter[1] === "All") && (this.state.date[0] || this.state.date[1])`
-      );
+    if (this.state.dateFilterActive) {
+      console.log("this.state.dateFilterActive!!");
+      if (this.state.filter[0] === "All" && this.state.filter[1] === "All") {
+        url = `https://rickandmortyapi.com/api/character/?page=`;
+        request.push(
+          fetch(`https://rickandmortyapi.com/api/character/`)
+            .then(response => response.json())
+            .then(data => {
+              return data.info.pages;
+            })
+        );
+      } else if (
+        this.state.filter[0] !== "All" &&
+        this.state.filter[1] !== "All"
+      ) {
+        url = `https://rickandmortyapi.com/api/character/?species=${
+          this.state.filter[0]
+        }&&status=${this.state.filter[1]}&&page=`;
 
-      if (this.state.filter[0] !== "All") {
-        console.log("this.state.filter[0] !== 'All'", this.state.filter[0]);
-      } else {
-        console.log("this.state.filter[0] !== 'All'", this.state.filter[1]);
+        request.push(
+          fetch(
+            `https://rickandmortyapi.com/api/character/?species=${
+              this.state.filter[0]
+            }&&status=${this.state.filter[1]}`
+          )
+            .then(response => response.json())
+            .then(data => {
+              // if (data.info.pages) {
+              return data.info.pages;
+              // } else {
+              //   return false;
+              // }
+            })
+            .catch(err => this.setState({ ...this.state, noResults: true }))
+        );
+      } else if (
+        this.state.filter[0] !== "All" ||
+        this.state.filter[1] !== "All"
+      ) {
+        if (this.state.filter[0] !== "All") {
+          url = `https://rickandmortyapi.com/api/character/?species=${
+            this.state.filter[0]
+          }&&page=`;
+
+          request.push(
+            fetch(
+              `https://rickandmortyapi.com/api/character/?species=${
+                this.state.filter[0]
+              }`
+            )
+              .then(response => response.json())
+              .then(data => {
+                // if (data.info.pages) {
+                return data.info.pages;
+                // } else {
+                //   return false;
+                // }
+              })
+              .catch(err => this.setState({ ...this.state, noResults: true }))
+          );
+        } else if (this.state.filter[1] !== "All") {
+          url = `https://rickandmortyapi.com/api/character/?status=${
+            this.state.filter[1]
+          }&&page=`;
+
+          request.push(
+            fetch(
+              `https://rickandmortyapi.com/api/character/?status=${
+                this.state.filter[1]
+              }`
+            )
+              .then(response => response.json())
+              .then(data => {
+                // if (data.info.pages) {
+                return data.info.pages;
+                // } else {
+                //   return false;
+                // }
+              })
+              .catch(err => this.setState({ ...this.state, noResults: true }))
+          );
+        }
       }
+      Promise.all(request).then(pages => {
+        if (pages[0]) {
+          this.setState({ ...this.state, pages: pages[0] });
+          if (this.state.date[0] && this.state.date[1]) {
+            this.fetchCharactersWithDateFilter(url, true, true);
+          } else if (this.state.date[0]) {
+            this.fetchCharactersWithDateFilter(url, true, false);
+          } else if (this.state.date[1]) {
+            this.fetchCharactersWithDateFilter(url, false, true);
+          }
+        } else {
+          this.setState({ ...this.state, dateFilterActive: true });
+        }
+      });
+      /////////////////////////////////////////////////////////////////////////
     } else if (
       this.state.filter[0] !== "All" &&
       this.state.filter[1] !== "All"
@@ -73,8 +148,8 @@ class App extends Component {
           this.fetchThen(data, activePage, renderedCharacters);
         });
     } else if (
-      this.state.filter[0] !== "All" ||
-      this.state.filter[1] !== "All"
+      (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") &&
+      !this.state.dateFilterActive
     ) {
       if (this.state.filter[0] !== "All") {
         queryUrl = `?species=${this.state.filter[0]}&&page=${page}`;
@@ -93,98 +168,21 @@ class App extends Component {
       }
     } else if (
       this.state.filter[0] === "All" &&
-      this.state.filter[1] === "All"
+      this.state.filter[1] === "All" &&
+      !this.state.dateFilterActive
     ) {
+      console.log("last else if in fetchCharacters");
       fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
-        // fetch(
-        //   `https://rickandmortyapi.com/api/character/?created=2017-12-04T18:50:21.651Z&&page=${page}`
-        // )
         .then(response => response.json())
         .then(data => {
           console.log(data);
           this.fetchThen(data, activePage, renderedCharacters);
         });
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // if (this.state.filter[0] === "All" && this.state.filter[1] === "All") {
-    //   fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
-    //     // fetch(
-    //     //   `https://rickandmortyapi.com/api/character/?created=2017-12-04T18:50:21.651Z&&page=${page}`
-    //     // )
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       console.log(data);
-    //       this.fetchThen(data, activePage, renderedCharacters);
-    //     });
-    // }
-    // else if (
-    //   this.state.filter[0] !== "All" &&
-    //   this.state.filter[1] !== "All"
-    // ) {
-    //   fetch(
-    //     `https://rickandmortyapi.com/api/character/?species=${
-    //       this.state.filter[0]
-    //     }&&status=${this.state.filter[1]}&&page=${page}`
-    //   )
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       this.fetchThen(data, activePage, renderedCharacters);
-    //     });
-    // }
-    // ////////////////////////////////////////////////////////////////////////////////////////////////
-    // else if (this.state.filter[0] !== "All" || this.state.filter[1] !== "All") {
-    //   if (this.state.filter[0] !== "All") {
-    //     queryUrl = `?species=${this.state.filter[0]}&&page=${page}`;
-    //     fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
-    //       .then(response => response.json())
-    //       .then(data => {
-    //         this.fetchThen(data, activePage, renderedCharacters);
-    //       });
-    //   } else {
-    //     queryUrl = `?status=${this.state.filter[1]}&&page=${page}`;
-    //     fetch(`https://rickandmortyapi.com/api/character/${queryUrl}`)
-    //       .then(response => response.json())
-    //       .then(data => {
-    //         this.fetchThen(data, activePage, renderedCharacters);
-    //       });
-    //   }
-    //   ///////////////////////////////////////////////////////////////////////////////////////////////
-    // }
-    //
-    // if (this.state.date[0]) {
-    //   console.log("Date in fetchCharacters!!!");
-    //
-    //   // let emptyArr = [];
-    //   let characters = [];
-    //   let newCharacters = [];
-    //
-    //   async function asyncCall(characters, i) {
-    //     const fetchResult = await fetch(
-    //       `https://rickandmortyapi.com/api/character/?page=${page}`
-    //     )
-    //       .then(data => data.json())
-    //       .then(async data => {
-    //         await characters.push(data.results);
-    //         await characters.concat(data.results);
-    //         if (i === data.info.count - 1) {
-    //           await this.setState({
-    //             ...this.state,
-    //             charactersDate: characters
-    //           });
-    //         }
-    //       });
-    //   }
-    //
-    //   for (let i = 0; i < this.state.pages; i++) {
-    //     asyncCall(characters, i);
-    //   }
-    // }
   };
 
   fetchThen(data, activePage, renderedCharacters) {
-    console.log(data);
+    // console.log(data);
     if (data.error) {
       this.setState({
         ...this.state,
@@ -201,8 +199,8 @@ class App extends Component {
         renderedCharacters = data.results.slice(0, 10);
       }
 
-      let dateFilterLimit = [...this.state.dateFilterLimit];
-      dateFilterLimit[0] = data;
+      // let dateFilterLimit = [...this.state.dateFilterLimit];
+      // dateFilterLimit[0] = data;
 
       this.setState({
         ...this.state,
@@ -223,7 +221,26 @@ class App extends Component {
     // console.log("pageNumber:", pageNumber);
     // console.log("queryParameter:", queryParameter.toFixed(0));
 
-    this.fetchCharacters(queryParameter.toFixed(0), pageNumber);
+    console.log("this.state.dateFilterActive:", this.state.dateFilterActive);
+
+    if (this.state.dateFilterActive) {
+      console.log("date filter active");
+
+      let sliceRange = (pageNumber - 1) * 10;
+      console.log("sliceRange:", sliceRange);
+      console.log("pageNumber:", pageNumber);
+      console.log("renderedCharacters", this.state.renderedCharacters);
+      this.setState({
+        ...this.state,
+        renderedCharacters: this.state.characters.slice(
+          sliceRange,
+          pageNumber * 10
+        ),
+        activePage: pageNumber
+      });
+    } else {
+      this.fetchCharacters(queryParameter.toFixed(0), pageNumber);
+    }
   }
 
   startDateHandler(e) {
@@ -244,7 +261,11 @@ class App extends Component {
 
     //    console.log("dateFilterLimit[0]", dateFilterLimit[0]);
 
-    this.setState({ ...this.state, dateFilterLimit: dateFilterLimit });
+    this.setState({
+      ...this.state,
+      dateFilterLimit: dateFilterLimit,
+      dateFilterActive: true
+    });
   }
 
   endDateHandler(e) {
@@ -259,11 +280,93 @@ class App extends Component {
     const dateFilterLimit = [...this.state.dateFilterLimit];
     dateFilterLimit[1] = dateLimit;
 
-    this.setState({ ...this.state, dateFilterLimit: dateFilterLimit });
+    this.setState({
+      ...this.state,
+      dateFilterLimit: dateFilterLimit,
+      dateFilterActive: true
+    });
   }
 
+  fetchCharactersWithDateFilter = (url, startDate, endDate) => {
+    console.log("fetch with date filter!!!");
+    console.log("this.state.pages:", this.state.pages);
+    const requests = [];
+    for (let i = 1; i < this.state.pages + 1; i++) {
+      requests.push(
+        fetch(url + i)
+          .then(data => data.json())
+          .then(data => {
+            // console.log("data", data);
+            return data.results;
+          })
+      );
+    }
+
+    Promise.all(requests)
+      .then(arrayWithData => {
+        // console.log("arrayWithData:", arrayWithData);
+        // console.log("fetch with date filter 1 promise all!!!");
+        let characters = arrayWithData.reduce(function(arrayOne, arrayTwo) {
+          return arrayOne.concat(arrayTwo);
+        }, []);
+
+        let filteredCharacters = [];
+
+        if (startDate && endDate) {
+          for (let i = 0; i < characters.length; i++) {
+            let createdDate = new Date(characters[i].created);
+            let startFilterDate = new Date(this.state.date[0]);
+            let endFilterDate = new Date(this.state.date[1]);
+            if (
+              createdDate >= startFilterDate &&
+              createdDate <= endFilterDate
+            ) {
+              filteredCharacters.push(characters[i]);
+            }
+          }
+
+          // console.log("filteredCharacters: ", filteredCharacters);
+        } else if (startDate && !endDate) {
+          for (let i = 0; i < characters.length; i++) {
+            let createdDate = new Date(characters[i].created);
+            let startFilterDate = new Date(this.state.date[0]);
+            if (createdDate >= startFilterDate) {
+              filteredCharacters.push(characters[i]);
+            }
+          }
+        } else if (!startDate && endDate) {
+          for (let i = 0; i < characters.length; i++) {
+            let createdDate = new Date(characters[i].created);
+            let endFilterDate = new Date(this.state.date[1]);
+            if (createdDate <= endFilterDate) {
+              filteredCharacters.push(characters[i]);
+            }
+          }
+        }
+
+        Promise.all(filteredCharacters).then(filteredCharacters => {
+          if (filteredCharacters.length === 0) {
+            console.log(
+              "filteredCharacters.length: ",
+              filteredCharacters.length
+            );
+            this.setState({
+              noResults: true
+            });
+          } else {
+            console.log("filteredCharacters.length", filteredCharacters.length);
+            this.setState({
+              characters: filteredCharacters,
+              totalCharacters: filteredCharacters.length,
+              renderedCharacters: filteredCharacters.slice(0, 10)
+            });
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <h1>Characters API</h1>
@@ -309,7 +412,10 @@ class App extends Component {
             <Characters characters={this.state.renderedCharacters} />
           </>
         ) : (
-          <>No Results</>
+          <>
+            <br />
+            No Results
+          </>
         )}
 
         <Pagination

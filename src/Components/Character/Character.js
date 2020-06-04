@@ -18,7 +18,6 @@ const character = props => (
             {props.character.species}
           </td>
           <td>{props.character.status}</td>
-          <td>{props.character.id}</td>
           <td>{props.character.created.slice(0, 10)}</td>
           <td style={{ color: "red" }}>id: {props.character.id}</td>
         </tr>
