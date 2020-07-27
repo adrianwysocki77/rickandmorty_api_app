@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Characters from "./Containers/Characters/Characters";
 import Filter from "./Components/Filter/Filter";
 
+import Logo from "./logo.svg"
+
 class App extends Component {
   state = {
     filter: ["All", "All"],
@@ -318,65 +320,73 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Characters API</h1>
-        <Filter
-          filterHandler={filter =>
-            this.setState({
-              ...this.state,
-              filter: [filter, this.state.filter[1]],
-              activePage: 1
-            })
-          }
-          species
-        />
-        <Filter
-          filterHandler={filter =>
-            this.setState({
-              ...this.state,
-              filter: [this.state.filter[0], filter],
-              activePage: 1
-            })
-          }
-          status
-        />
+        <img src={Logo} className="Logo" alt="logo_rick_and_morty"/>
 
-        <Filter
-          date={"Start Date"}
-          selected={this.state.date[0]}
-          dateHandler={date => this.startDateHandler(date)}
-          dateLimit={this.state.dateFilterLimit[1]}
-        />
-        <Filter
-          date={"End Date"}
-          selected={this.state.date[1]}
-          dateHandler={date => this.endDateHandler(date)}
-          dateLimit={this.state.dateFilterLimit[0]}
-        />
+        <div className="SelectFilterContainer">
+            <Filter
+              filterHandler={filter =>
+                this.setState({
+                  ...this.state,
+                  filter: [filter, this.state.filter[1]],
+                  activePage: 1
+                })
+              }
+              species
+            />
+            <Filter
+              filterHandler={filter =>
+                this.setState({
+                  ...this.state,
+                  filter: [this.state.filter[0], filter],
+                  activePage: 1
+                })
+              }
+              status
+            />
+        </div>
 
-        <br />
-        <button onClick={this.fetchCharacters}>Search</button>
+        <div className="SelectFilterContainer">
+            <Filter
+              date={"Start Date"}
+              selected={this.state.date[0]}
+              dateHandler={date => this.startDateHandler(date)}
+              dateLimit={this.state.dateFilterLimit[1]}
+            />
+            <Filter
+              date={"End Date"}
+              selected={this.state.date[1]}
+              dateHandler={date => this.endDateHandler(date)}
+              dateLimit={this.state.dateFilterLimit[0]}
+            />
+        </div>
+
+        <div className="Container">
+            <div className="Search" onClick={this.fetchCharacters}>Search</div>
+        </div>
 
         {!this.state.noResults ? (
-          <>
+          <div className="CharactersContiner">
             <Characters characters={this.state.renderedCharacters} />
-          </>
+          </div>
         ) : (
           <>
-            <br />
-            No Results
+            <div className="NoResults">No Results</div>
           </>
         )}
 
-        <Pagination
-          activePage={this.state.activePage}
-          itemsCountPerPage={10}
-          totalItemsCount={this.state.totalCharacters}
-          pageRangeDisplayed={5}
-          itemClass={"page-item"}
-          linkClass={"page-link"}
-          onChange={this.handlePageChange.bind(this)}
-          hideDisabled={true}
-        />
+        <div className="PaginationContainer" onClick={()=>console.log("pagination clicked!!")}>
+            <Pagination
+              activePage={this.state.activePage}
+              itemsCountPerPage={10}
+              totalItemsCount={this.state.totalCharacters}
+              pageRangeDisplayed={4}
+              itemClass={"page-item"}
+              linkClass={"page-link"}
+              onChange={this.handlePageChange.bind(this)}
+              hideDisabled={true}
+
+            />
+        </div>
       </div>
     );
   }

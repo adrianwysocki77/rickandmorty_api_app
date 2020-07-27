@@ -1,0 +1,40 @@
+.SelectContainer {
+    display: flex;
+    /* border: 2px solid yellow; */
+    /* height: 50px; */
+}
+
+.Select {
+    background-color: #262828;
+    border-radius: 5px;
+    border: 0px solid transparent;
+    width: 130px;
+    height: 30px;
+    color: white;
+    border-radius: 10px;
+    margin: 5px;
+    padding-left: 10px;
+
+}
+
+.Select option {
+    background: #262828;
+    color: white;
+}
+
+.Input {
+    background: #262828;
+    border: 0px solid transparent;
+    border-radius: 10px;
+    width: 130px;
+    height: 30px;
+    padding-left: 10px;
+    color: white;
+    margin: 5px;
+}
+
+
+::placeholder {
+    color: white;
+    opacity: 1;
+}
