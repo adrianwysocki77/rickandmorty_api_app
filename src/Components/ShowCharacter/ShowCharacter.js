@@ -33,12 +33,30 @@ const showCharacter = props => (
           <div className={classes.Information}>{props.character.gender}</div>
         </>
       )}
+      {props.character.origin && (
+        <>
+          <div className={classes.Description}>Origin</div>
+          <div className={classes.Information}>
+            {props.character.origin.name}
+          </div>
+        </>
+      )}
+
       {props.character.location.name !== "" && (
         <>
-          <div className={classes.Description}>Location</div>
+          <div className={classes.Description}>Last known location</div>
           <div className={classes.Information}>
             {props.character.location.name}
           </div>
+        </>
+      )}
+
+      {props.character.episodes !== "" && (
+        <>
+          <div className={classes.Description}>
+            Appeared in {props.character.episodes.split(",").length} episodes:
+          </div>
+          <div className={classes.Information}>{props.character.episodes}</div>
         </>
       )}
     </div>

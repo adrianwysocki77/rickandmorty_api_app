@@ -4,11 +4,19 @@ import ShowCharacter from "../../Components/ShowCharacter/ShowCharacter";
 
 class Characters extends Component {
   state = {
-    character: null
+    character: null,
+    episodes: []
   };
 
   characterHandler = character => {
-    console.log("character!!");
+    let episodes = [];
+    for (let i = 0; i < character.episode.length; i++) {
+      let startIndex;
+      startIndex = character.episode[i].indexOf("episode/") + 8;
+      episodes.push(character.episode[i].slice(startIndex));
+    }
+
+    character.episodes = episodes.toString();
     this.setState({ character: character });
   };
 
@@ -17,7 +25,7 @@ class Characters extends Component {
   };
 
   render() {
-    console.log(this.state.character);
+    // console.log(this.state.character);
     return (
       <>
         {this.props.characters &&

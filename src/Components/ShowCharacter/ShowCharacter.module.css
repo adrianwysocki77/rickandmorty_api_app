@@ -22,7 +22,9 @@
 }
 
 .Character {
-  width: 285px;
+  /* width: 285px; */
+  width: 420px;
+
   min-height: 500px;
   background: #262828;
   margin: auto;
@@ -43,6 +45,7 @@
   left: 8px;
   top: 4px;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .ImageContiner {
@@ -117,4 +120,6 @@
   text-align: left;
   width: 100%;
   padding-left: 25px;
+  padding-right: 25px;
+  word-wrap: break-word;
 }
