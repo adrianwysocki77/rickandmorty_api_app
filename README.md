@@ -29,5 +29,3 @@ Search for characters using date/specie/status filters. Navigate through the sea
 ![img](./images_readme/5.png)
 
 ![img](./images_readme/6.png)
-
----
