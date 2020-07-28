@@ -24,6 +24,8 @@ Search for characters using date/specie/status filters. Navigate through the sea
 
 ![img](./images_readme/4.png)
 
+---
+
 ### Responsiveness
 
 ![img](./images_readme/5.png)
