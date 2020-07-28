@@ -123,3 +123,10 @@
   padding-right: 25px;
   word-wrap: break-word;
 }
+
+@media (max-width: 500px) {
+  .Character {
+    width: 95%;
+    margin-top: 10px;
+  }
+}

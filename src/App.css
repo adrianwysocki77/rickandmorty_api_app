@@ -1,13 +1,30 @@
-html {
-  width: 100vw;
-  min-height: 100vh;
-  overflow-x: hidden;
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
 }
 
+html {
+  background: #0e1111;
+}
+
+/* body {
+  background-color: red;
+  height: 100vh;
+  width: 100vw;
+  border: 2px solid yellow;
+}
+#root {
+  background-color: purple;
+  border: 2px solid brown;
+  width: 80vw;
+  height: 100vh;
+}
+ */
 .App {
   text-align: center;
-  min-height: 100vh;
   background-color: #0e1111;
+  /* min-height: 100vh; */
 }
 
 .Logo {
@@ -47,15 +64,6 @@ html {
   background: #ff0065;
 }
 
-.CharactersContiner {
-  /* border: 2px solid pink; */
-  display: flex;
-  /* flex-direction: column; */
-  /* align-items: center; */
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 .NoResults {
   margin: 30px;
   color: white;
@@ -74,4 +82,9 @@ html {
     width: 90%;
     margin-bottom: 30px;
   }
+}
+
+.test {
+  width: 100%;
+  height: 3000px;
 }

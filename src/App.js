@@ -377,12 +377,10 @@ class App extends Component {
         </div>
 
         {!this.state.noResults ? (
-          <div className="CharactersContiner">
-            <Characters
-              characters={this.state.renderedCharacters}
-              choosenCharacter={this.choosenCharacter}
-            />
-          </div>
+          <Characters
+            characters={this.state.renderedCharacters}
+            choosenCharacter={this.choosenCharacter}
+          />
         ) : (
           <>
             <div className="NoResults">No Results</div>
@@ -394,7 +392,7 @@ class App extends Component {
             activePage={this.state.activePage}
             itemsCountPerPage={10}
             totalItemsCount={this.state.totalCharacters}
-            pageRangeDisplayed={4}
+            pageRangeDisplayed={3}
             itemClass={"page-item"}
             linkClass={"page-link"}
             onChange={this.handlePageChange.bind(this)}
