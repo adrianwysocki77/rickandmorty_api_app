@@ -1,4 +1,4 @@
-### Rick And Morty API App
+### Rick And Morty API
 
 Search for your favorite Rick and Morty cartoon characters using API.
 
