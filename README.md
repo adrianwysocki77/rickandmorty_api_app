@@ -12,14 +12,22 @@ https://rickandmortyapi-deada.web.app/
 
 HTML/CSS, Bootstrap
 
-## ![img](./images_readme/2.png)
+![img](./images_readme/2.png)
 
 ---
 
 ### Features
 
-Search for characters using date/specie/status filters. Navigate through the page using pagination.
+Search for characters using date/specie/status filters. Navigate through the search result using pagination.
 
 ![img](./images_readme/3.png)
+
+![img](./images_readme/4.png)
+
+### Responsiveness
+
+![img](./images_readme/5.png)
+
+![img](./images_readme/6.png)
 
 ---
