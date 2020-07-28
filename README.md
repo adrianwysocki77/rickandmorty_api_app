@@ -18,9 +18,11 @@ HTML/CSS, Bootstrap
 
 ### Features
 
-Search for characters using date/specie/status filters. Navigate through the search result using pagination.
+Search for characters using date/specie/status filters.
 
 ![img](./images_readme/3.png)
+
+Navigate through the search results using pagination.
 
 ![img](./images_readme/4.png)
 
