@@ -1,35 +1,35 @@
 .Character {
-    background-color: #262828;
-    width: 230px;
-    height: 300px;
-    margin: 5px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
+  background-color: #262828;
+  width: 230px;
+  height: 300px;
+  margin: 5px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
 }
 
 .ImageContainer {
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
-    overflow: hidden;
-    margin-top: 15px;
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  overflow: hidden;
+  margin-top: 15px;
 }
 
-
 .CharacterName {
-    width: 100%;
-    height: 65px;
-    background: #3e4040;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    color: white;
-    font-size: 22px;
+  width: 100%;
+  height: 65px;
+  background: #3e4040;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .Img {

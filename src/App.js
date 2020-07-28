@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Characters from "./Containers/Characters/Characters";
 import Filter from "./Components/Filter/Filter";
 
-import Logo from "./logo.svg"
+import Logo from "./logo.svg";
 
 class App extends Component {
   state = {
@@ -19,7 +19,8 @@ class App extends Component {
     date: [null, null],
     dateFilterLimit: [null, null],
     dateFilterActive: false,
-    noResults: false
+    noResults: false,
+    showCharacter: false
   };
 
   componentDidMount() {
@@ -317,56 +318,70 @@ class App extends Component {
     }
   }
 
+  choosenCharacter(character) {
+    console.log("character in choosen!!!: ", character);
+
+    // this.setState({
+    //   ...this.state,
+    //   choosenCharacter: character
+    // });
+  }
+
   render() {
     return (
       <div className="App">
-        <img src={Logo} className="Logo" alt="logo_rick_and_morty"/>
+        <img src={Logo} className="Logo" alt="logo_rick_and_morty" />
 
         <div className="SelectFilterContainer">
-            <Filter
-              filterHandler={filter =>
-                this.setState({
-                  ...this.state,
-                  filter: [filter, this.state.filter[1]],
-                  activePage: 1
-                })
-              }
-              species
-            />
-            <Filter
-              filterHandler={filter =>
-                this.setState({
-                  ...this.state,
-                  filter: [this.state.filter[0], filter],
-                  activePage: 1
-                })
-              }
-              status
-            />
+          <Filter
+            filterHandler={filter =>
+              this.setState({
+                ...this.state,
+                filter: [filter, this.state.filter[1]],
+                activePage: 1
+              })
+            }
+            species
+          />
+          <Filter
+            filterHandler={filter =>
+              this.setState({
+                ...this.state,
+                filter: [this.state.filter[0], filter],
+                activePage: 1
+              })
+            }
+            status
+          />
         </div>
 
         <div className="SelectFilterContainer">
-            <Filter
-              date={"Start Date"}
-              selected={this.state.date[0]}
-              dateHandler={date => this.startDateHandler(date)}
-              dateLimit={this.state.dateFilterLimit[1]}
-            />
-            <Filter
-              date={"End Date"}
-              selected={this.state.date[1]}
-              dateHandler={date => this.endDateHandler(date)}
-              dateLimit={this.state.dateFilterLimit[0]}
-            />
+          <Filter
+            date={"Start Date"}
+            selected={this.state.date[0]}
+            dateHandler={date => this.startDateHandler(date)}
+            dateLimit={this.state.dateFilterLimit[1]}
+          />
+          <Filter
+            date={"End Date"}
+            selected={this.state.date[1]}
+            dateHandler={date => this.endDateHandler(date)}
+            dateLimit={this.state.dateFilterLimit[0]}
+          />
         </div>
 
         <div className="Container">
-            <div className="Search" onClick={this.fetchCharacters}>Search</div>
+          <div className="Search" onClick={this.fetchCharacters}>
+            Search
+          </div>
         </div>
 
         {!this.state.noResults ? (
           <div className="CharactersContiner">
-            <Characters characters={this.state.renderedCharacters} />
+            <Characters
+              characters={this.state.renderedCharacters}
+              choosenCharacter={this.choosenCharacter}
+            />
           </div>
         ) : (
           <>
@@ -374,18 +389,17 @@ class App extends Component {
           </>
         )}
 
-        <div className="PaginationContainer" onClick={()=>console.log("pagination clicked!!")}>
-            <Pagination
-              activePage={this.state.activePage}
-              itemsCountPerPage={10}
-              totalItemsCount={this.state.totalCharacters}
-              pageRangeDisplayed={4}
-              itemClass={"page-item"}
-              linkClass={"page-link"}
-              onChange={this.handlePageChange.bind(this)}
-              hideDisabled={true}
-
-            />
+        <div className="PaginationContainer">
+          <Pagination
+            activePage={this.state.activePage}
+            itemsCountPerPage={10}
+            totalItemsCount={this.state.totalCharacters}
+            pageRangeDisplayed={4}
+            itemClass={"page-item"}
+            linkClass={"page-link"}
+            onChange={this.handlePageChange.bind(this)}
+            hideDisabled={true}
+          />
         </div>
       </div>
     );

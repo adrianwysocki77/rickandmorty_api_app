@@ -1,79 +1,77 @@
-
 html {
-    width: 100vw;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .App {
   text-align: center;
   min-height: 100vh;
-  background-color: #0E1111;
+  background-color: #0e1111;
 }
 
 .Logo {
-    width: 70%;
-    margin-top: 30px;
-    margin-bottom: 50px;
+  width: 70%;
+  margin-top: 30px;
+  margin-left: 100;
+  margin-bottom: 50px;
 }
 
 .SelectFilterContainer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
-
 .Container {
-    width: 100vw;
-    display: flex;
-    justify-content: center;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
 }
 
 .Search {
-    background: #00FF00;
-    border: 0px solid transparent;
-    border-radius: 10px;
-    width: 80px;
-    height: 30px;
-    color: white;
-    margin: 10px;
-    padding-top: 3px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-right: 15px;
-    transition: 0.5s;
+  background: #00ff00;
+  border: 0px solid transparent;
+  border-radius: 10px;
+  width: 80px;
+  height: 30px;
+  color: white;
+  margin: 10px;
+  padding-top: 3px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: 0.5s;
 }
 
 .Search:hover {
-    background: #FF0065;
+  background: #ff0065;
 }
 
 .CharactersContiner {
-    /* border: 2px solid pink; */
-    display: flex;
-    /* flex-direction: column; */
-    /* align-items: center; */
-    justify-content: center;
-    flex-wrap: wrap;
+  /* border: 2px solid pink; */
+  display: flex;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .NoResults {
-    margin: 30px;
-    color: white;
+  margin: 30px;
+  color: white;
 }
 
 .PaginationContainer {
-    display: flex;
-    justify-content: center;
-    height: 50px;
-    margin-top: 20px;
-    margin-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  margin-top: 20px;
+  margin-bottom: 5px;
 }
 
-
-
 @media (max-width: 500px) {
-
-    .Logo {
-        width: 90%;
-        margin-bottom: 30px;
-    }
+  .Logo {
+    width: 90%;
+    margin-bottom: 30px;
+  }
 }
