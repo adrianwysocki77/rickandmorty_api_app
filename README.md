@@ -10,7 +10,7 @@ https://rickandmortyapi-deada.web.app/
 
 ### Frontend
 
-HTML/CSS, Bootstrap
+React.js, HTML/CSS, Bootstrap
 
 ![img](./images_readme/2.png)
 
